@@ -12,14 +12,14 @@ Assertion
 
 
 ==================
-synth.sh input output [output]
+synth.sh input output [output]\n
   
 
-synth_graph.pl input output
+synth_graph.pl input output\n
 
 
 synth_graph.out
-  Above perl script in executable form.
+  Above perl script in executable form.\n
 
 
 synth_assert.pl input output numvars
