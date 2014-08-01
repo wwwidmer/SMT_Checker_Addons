@@ -1,0 +1,18 @@
+
+(sysout (in-1) ())
+(join-1 (in-3 in-2) (out-1))
+(add-1 (in-4 in-5 in-18) (out-2 out-1))
+(add-2 (in-6 in-7 in-19) (out-4 out-3))
+(zero () (out-6))
+(one () (out-7))
+(nand-1 (in-8 in-9) (out-8))
+(nand-2 (in-10 in-11) (out-9))
+(nand-3 (in-12 in-13) (out-10))
+(nand-4 (in-14 in-15) (out-11))
+(split-1 (in-16) (out-15 out-14 out-13 out-12))
+(split-2 (in-17) (out-19 out-18 out-17 out-16))
+(xl () (out-20))
+(xh () (out-21))
+(yl () (out-22))
+(yh () (out-23))
+
