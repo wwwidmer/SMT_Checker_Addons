@@ -70,36 +70,57 @@ sub create_graph{
 		if($out == 0){
 		    next;
 		}
-		my($inc, $outc) = split(/ /,make_connections($in, $out, \%components));	
-		$graph -> add_edge(from=>"$outc",to=>"$inc",label=>"out-$out to in-$in");
-	    }     
+		my(@ins)= make_inconnections($in, $out, \%components);	
+		my(@outs)= make_outconnections($in, $out, \%components);
+	    # check that nodes exist, I actually don't know why this works
+		foreach my $i (0..$#ins){
+		    if($outs[$i]){
+		    $graph -> add_edge(from=>"$outs[$i]", to=>"$ins[$i]", label=>"out-$out to in-$in");
+		    }
+		}
+	    } 
 	}
       }
     output_dot($graph);
 }
 
-sub make_connections{
+sub make_outconnections{
+  my($in) = $_[0];
+    my($out) = $_[1];        
+    my(%components) = %{$_[2]};    
+    my(@outsc);
+    my($key);
+    foreach $key(keys %components){
+	my(@ins) = @{$components{$key}{'ins'}};
+	my(@outs) = @{$components{$key}{'outs'}};
+	
+	foreach my $x (@outs){
+	    if($x == $out){
+		print "$x $key\n";
+		push(@outsc,$key);
+	    }
+	}
+    }
+  return @outsc;
+}
+
+sub make_inconnections{
     my($in) = $_[0];
     my($out) = $_[1];        
     my(%components) = %{$_[2]};    
-    my($inc) = 0;
-    my($outc) = 0;
+    my(@insc);
     my($key);
     foreach $key(keys %components){
 	my(@ins) = @{$components{$key}{'ins'}};
 	my(@outs) = @{$components{$key}{'outs'}};
 	foreach my $x (@ins){
 	    if($x == $in){
-		$inc = $key;
+		print "$x $key\n";
+		push(@insc,$key);
 	    }	    
 	}
-	foreach my $x (@outs){
-	    if($x == $out){
-		$outc = $key;
-	    }
-	}
     }
-    return "$inc $outc";  
+    return @insc;
 }
 
 sub create_component{
