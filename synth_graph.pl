@@ -96,7 +96,6 @@ sub make_outconnections{
 	
 	foreach my $x (@outs){
 	    if($x == $out){
-		print "$x $key\n";
 		push(@outsc,$key);
 	    }
 	}
@@ -115,7 +114,6 @@ sub make_inconnections{
 	my(@outs) = @{$components{$key}{'outs'}};
 	foreach my $x (@ins){
 	    if($x == $in){
-		print "$x $key\n";
 		push(@insc,$key);
 	    }	    
 	}
