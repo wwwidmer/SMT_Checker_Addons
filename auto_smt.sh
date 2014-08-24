@@ -24,6 +24,7 @@ cvc4 foo.smt2 > connections
 cat components connections > bar
 # graph and assert scripts - done
 ./synth.out bar graph_out$iter
+./synth_graph.pl bar graph_imgout$iter
 ./synth_assert.pl connections assert_out$iter 30
 # 4 uncomment DIST macro repeat - done
 sed -i "$distline s/;;define/define/" $1
@@ -32,8 +33,10 @@ sed -i "$distline s/;;define/define/" $1
 { time cvc4 foo.smt2 ; } 2>time.log$iter
 cvc4 foo.smt2 > connections
 # 6 check for unsat - wip
-if [`echo "unsat" || grep 'connections'`] then;
-$satisfied = true
+
+if grep -q "unsat" connections; then
+echo "UNSAT detected"
+satisfied=""true
 fi
 
 # 7 edit foo.m4 to add wff from 5s out
