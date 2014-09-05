@@ -1,4 +1,0 @@
-(sysout (in-1)())
-(add0 (in-20 in-5)(out-2 out-1))
-(add1 (in-5 in-6 (out-1 out-5))
-(sysin () (out-20))
