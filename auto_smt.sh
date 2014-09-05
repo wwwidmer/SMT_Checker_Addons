@@ -35,16 +35,22 @@ cat components connections > bar
 oracle_assertions () {
 iter=$2
 addwff=$(awk "/ADDWFF/ { print NR;}" $1)
-sysnum=1
-while [ $sysnum -lt 9 ]
-do
-read -p "Enter sysout for sysin= "$sysnum": " temp
-sysout="(sysinxh-"$sysnum" (_ bv"$temp" 5))"
+
+read -p "Enter sysout for sysinxh="$iter": " temp
+sysout="(sysinxh-"$iter" (_ bv"$temp" 4))"
 echo $sysout >> oracle$iter
-((sysnum++))
-done
+read -p "Enter sysout for sysinxl="$iter": " temp
+sysout="(sysinxl-"$iter" (_ bv"$temp" 4))"
+echo $sysout >> oracle$iter
+read -p "Enter sysout for sysinyh="$iter": " temp
+sysout="(sysinyh-"$iter" (_ bv"$temp" 4))"
+echo $sysout >> oracle$iter
+read -p "Enter sysout for sysinyl="$iter": " temp
+sysout="(sysinyl-"$iter" (_ bv"$temp" 4))"
+echo $sysout >> oracle$iter
+
 # format 
-./synth_assert.pl oracle$iter assert_oracle$iter 120
+./synth_assert.pl oracle$iter assert_oracle$iter 15
 line=$(head -1 assert_oracle$iter)
 sed -i "$addwff i $line" $1
 }
@@ -57,14 +63,12 @@ main () {
 
 iter=1
 check_for_satisfied=""true
-# always keep a backup
-if [ -e $1 ]
-then
-cp $1 $1_b
-fi
 
 while [ $check_for_satisfied == true ]
 do
+# keep a backup of the backup (for testing each iteration)
+cp $1 $1_b
+
 
 # 1 add to iter line 81 - done
 add_to_iter $1 $iter
@@ -81,12 +85,13 @@ sed -i "$distline s/;;define/define/" $1
 # 5 - timing - done
 { time cvc4 foo.smt2 ; } 2>time.log$iter
 cvc4 foo.smt2 > connections
-./synth_assert.pl connections assert_out$iter 32
+./synth_assert.pl connections assert_out$iter 15
 
 # 6 check for unsat - done??
 if grep -q "unsat" connections; then
 echo "UNSAT detected"
 check_for_satisfied=""false
+break
 fi
 
 # 7 edit foo.m4 to add wff from 5s out
@@ -101,4 +106,11 @@ done
 
 
 #call main
-main $1
+
+if [ -e $1 ]
+then
+backup=$1"_"$(date +%T)
+cp $1 $backup
+fi
+#backup
+main $backup
