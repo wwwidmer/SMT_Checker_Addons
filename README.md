@@ -21,7 +21,7 @@ MAKEFILE
 - Limited functionality for now
 
 make clean
-	Removes all temporary files (components, foo, bar)
+	Removes all temporary files (components, foo, bar, sed files)
 	Removes all output files from previous run (.png, .dot, assert_out, time log)
 
 - Todo -
