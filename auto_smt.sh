@@ -1,8 +1,8 @@
 #! /bin/bash
 iter=1
-satisfied=""false
+check_for_satisfied=""true
 cp $1 $1_b
-while [ $satisfied == false ]
+while [ $check_for_satisfied == true ]
 do
 
 # 1 add to iter line 81 - done
@@ -25,18 +25,21 @@ cat components connections > bar
 # graph and assert scripts - done
 ./synth.out bar graph_out$iter
 ./synth_graph.pl bar graph_imgout$iter
-./synth_assert.pl connections assert_out$iter 30
+./synth_assert.pl connections assert_out$iter 119
+
 # 4 uncomment DIST macro repeat - done
 sed -i "$distline s/;;define/define/" $1
 
 # 5 - done
 { time cvc4 foo.smt2 ; } 2>time.log$iter
 cvc4 foo.smt2 > connections
+./synth_assert.pl connections assert_out$iter 119
+
 # 6 check for unsat - wip
 
 if grep -q "unsat" connections; then
 echo "UNSAT detected"
-satisfied=""true
+check_for_satisfied=""false
 fi
 
 # 7 edit foo.m4 to add wff from 5s out

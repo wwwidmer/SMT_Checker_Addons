@@ -15,6 +15,17 @@ Graphing
 Assertion
 	Generates a series of assertions from connections and components. (Regex based) 
 
+==================
+MAKEFILE
+==================
+- Limited functionality for now
+
+make clean
+	Removes all temporary files (components, foo, bar)
+	Removes all output files from previous run (.png, .dot, assert_out, time log)
+
+- Todo -
+rebuild synth.out with a clean
 
 ==================
 FILES
