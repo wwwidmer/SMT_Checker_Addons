@@ -35,7 +35,7 @@ cat components connections > bar
 # not very good looking at the moment, just getting the idea down to make it work
 oracle_assertions () {
 iter=$2
-((iter++))
+
 addwff=$(awk "/ADDWFF/ { print NR;}" $1)
 
 read -p "Enter sysout for sysinxh="$iter": " xh
@@ -89,7 +89,7 @@ sed -i "$addwff i $line" $1
 
 main () {
 
-iter=1
+iter=2
 check_for_satisfied=""true
 
 while [ $check_for_satisfied == true ]
