@@ -2,7 +2,7 @@
 
 clean:
 	cp origin.m4 bigadd.m4
-	$(RM) *_b
+	$(RM) *_b*
 	$(RM) *.png
 	$(RM) *.dot
 	$(RM) *.log*
