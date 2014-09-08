@@ -78,7 +78,7 @@
 ; the body of the comment (if its in a macro). 
 ;----------------------------------------------------------------------------
 changecom(`;;')
-define(`ITER',2)
+define(`ITER',1)
 define(`NEXT',eval(ITER+1))
 ;;define(`DIST',`')   
 define(`INFO',`')
