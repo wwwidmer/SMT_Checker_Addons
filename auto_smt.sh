@@ -41,17 +41,16 @@ next=$2
 ((next++))
 
 addwff=$(awk "/ADDWFF/ { print NR;}" $1)
-
 lines=$(awk "/sysinxh/ { print NR;}" connections)
 sed -n $lines'p' connections >> oracle$iter
 
 echo "sysout-"$next" for inputs "
+more oracle$iter
 read -p "Enter sysout-"$next": " so
 
 ./synth_assert.pl oracle$iter assert_oracle$iter 15
 sed -i 's/)))/)/g' assert_oracle$iter
 echo "(= sysout-"$next" #b"$so")))" >> assert_oracle$iter
-read -p "Enter"
 line=$(head -1 assert_oracle$iter)
 sed -i "$addwff i $line" $1
 
