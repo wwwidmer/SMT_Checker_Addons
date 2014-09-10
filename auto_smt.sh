@@ -68,9 +68,6 @@ check_for_satisfied=""true
 
 while [ $check_for_satisfied == true ]
 do
-# keep a backup of the backup (for testing each iteration)
-cp $1 $1_b
-
 
 # 1 add to iter line 81 - done
 add_to_iter $1 $iter
@@ -83,10 +80,11 @@ create_connections $1 $iter
 
 # 4 uncomment DIST macro repeat - done
 sed -i "$distline s/;;define/define/" $1
+cp foo.smt2 foo_t.smt2
 clean
 
 # 5 - timing - done
-{ time cvc4 foo.smt2 ; } 2>time.log$iter
+{ time cvc4 foo_t.smt2 ; } 2>time.log$iter
 m4 -I /usr/share/m4/examples $1 > foo.smt2
 cvc4 foo.smt2 > connections
 cat components connections > bar
@@ -118,7 +116,7 @@ done
 
 if [ -e $1 ]
 then
-backup=$1"_b"$(date +%T)
+backup=$1"_b"
 cp $1 $backup
 fi
 #backup
