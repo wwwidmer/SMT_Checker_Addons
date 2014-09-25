@@ -64,3 +64,10 @@ output_assert$num - text file, where $num is the iteration number
 foo - placeholder
 bar - placeholder
 
+
+
+
+=================
+TODO
+=================
+Check for Oracle nodes better. Right now we just assume they're called sysin and grab that whole line. It works for examples but may not for future files depending on names. The cvc command automatically puts these files on a seperate line but I think we should plan for the worst. (Just slighty more complicated regex checking really)
