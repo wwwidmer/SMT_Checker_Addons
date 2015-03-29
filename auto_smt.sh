@@ -12,10 +12,10 @@ sed -i "$distline s/define/;;define/" $1
 
 # 2 remove - done
 clean () {
-rm foo.smt2
-rm components
-rm connections
-rm bar
+rm foo*
+rm components*
+rm connections*
+rm bar*
 }
 
 # 3 create connections - done
@@ -23,13 +23,15 @@ create_connections () {
 iter=$2
 
 m4 -I /usr/share/m4/examples $1 > foo.smt2
-cvc4 foo.smt2 > connections
-cat components connections > bar
+echo "cvc working..."
+(time cvc4 foo.smt2 > connections_s$iter) 2>time.logs$iter
+
+cat components connections_s$iter > bar_s$iter
 
 # graph and assert scripts 
-./synth.out bar graph_out$iter
-./synth_graph.pl bar graph_imgout$iter
-./synth_assert.pl connections assert_out$iter 119
+./synth.out bar_s$iter graph_out-s$iter
+#./synth_graph.pl bar_s graph_imgout-s$iter
+./synth_assert.pl connections_s$iter assert_out-s$iter 119
 }
 
 # 7 edit foo.m4 to add wff from 5s out
@@ -41,8 +43,8 @@ next=$2
 ((next++))
 
 addwff=$(awk "/ADDWFF/ { print NR;}" $1)
-lines=$(awk "/sysinxh/ { print NR;}" connections)
-sed -n $lines'p' connections >> oracle$iter
+lines=$(awk "/sysinxh/ { print NR;}" connections_d$iter)
+sed -n $lines'p' connections_d$iter >> oracle$iter
 
 echo "sysout-"$next" for inputs "
 more oracle$iter
@@ -68,7 +70,10 @@ check_for_satisfied=""true
 
 while [ $check_for_satisfied == true ]
 do
-
+    echo "==================+ITERATION $iter+======================="
+    echo "==========================================================="
+    echo "==========================================================="
+    echo "==========================================================="
 # 1 add to iter line 81 - done
 add_to_iter $1 $iter
 
@@ -77,23 +82,20 @@ clean
 
 # 3 create connections - done
 create_connections $1 $iter 
-
+cp foo.smt2 foo_s$iter.smt2
 # 4 uncomment DIST macro repeat - done
 sed -i "$distline s/;;define/define/" $1
-cp foo.smt2 foo_t.smt2
-clean
-
 # 5 - timing - done
-{ time cvc4 foo_t.smt2 ; } 2>time.log$iter
 m4 -I /usr/share/m4/examples $1 > foo.smt2
-cvc4 foo.smt2 > connections
-cat components connections > bar
-./synth.out bar graph_out-a$iter
-./synth_graph.pl bar graph_imgout-a$iter
-./synth_assert.pl connections assert_out-a$iter 255
+{ time cvc4 foo.smt2 > connections_d$iter ; } 2>time.logd$iter
+cp foo.smt2 foo_d$iter.smt2
+cat components connections_d$iter > bar_d$iter
+./synth.out bar_d$iter graph_out-a$iter
+#./synth_graph.pl bar_d graph_imgout-d$iter
+./synth_assert.pl connections_d$iter assert_out-d$iter 255
 
 # 6 check for unsat - done??
-if grep -q "unsat" connections; then
+if grep -q "unsat" connections_d$iter; then
 echo "UNSAT detected"
 check_for_satisfied=""false
 break
@@ -119,5 +121,5 @@ then
 backup=$1"_b"
 cp $1 $backup
 fi
-#backup
+#backup our M4 file -> to ensure we have an original copy
 main $backup
