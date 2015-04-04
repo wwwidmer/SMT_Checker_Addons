@@ -16,6 +16,22 @@ Assertion
 	Generates a series of assertions from connections and components. (Regex based) 
 
 ==================
+Running
+==================
+Add this line to your .m4 file
+; ADDWFF
+
+
+./auto_smt m4file
+
+
+
+==================
+Outputs
+==================
+
+
+==================
 MAKEFILE
 ==================
 - Limited functionality for now
@@ -23,6 +39,9 @@ MAKEFILE
 make clean
 	Removes all temporary files (components, foo, bar, sed files)
 	Removes all output files from previous run (.png, .dot, assert_out, time log)
+
+make sort
+     moves all S and A files into folders. (Synthesis and Alt-inputs)
 
 - Todo -
 rebuild synth.out with a clean
@@ -39,40 +58,18 @@ synth_graph.pl input output
 synth_graph.out
 	Above perl script in executable form (Binaries for most linux)
 
-
 synth_assert.pl input output numvars
 	Perl script for assertion production. 
 
-==================
-RUN
-==================
-./auto_smt.sh m4_file
 
-This script also cleans the folder of old Output files to avoid ambiguity. Please save your work after each successful run. 
-
-Interactive inputs:
-At end of iteration you will be prompted for a new set of connections assuming the circuit is not satisfied. This will be in the form:
-
-
-=================
-Outputs
-=================
-connections - ()
-components - ()
-output_graph$num - dot file, where $num is the iteration number
-output_assert$num - text file, where $num is the iteration number
-foo - placeholder
-bar - placeholder
-
-assertoracle
 
 
 
 =================
 TODO
 =================
-Check for Oracle nodes better. Right now we just assume they're called sysin and grab that whole line. It works for examples but may not for future files depending on names. The cvc command automatically puts these files on a seperate line but I think we should plan for the worst. (Just slighty more complicated regex checking really)
-
+Check for Oracle nodes better. 
+SRCDIR script relocation
 
 
 
@@ -80,6 +77,4 @@ Check for Oracle nodes better. Right now we just assume they're called sysin and
 ISSUES
 =================
 
---kappointment
-
--- 
+-- That out-1 in-1 bug.

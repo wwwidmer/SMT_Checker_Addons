@@ -1,5 +1,7 @@
 #! /bin/bash
 
+srcdir=$HOME/src/synthesis
+
 # 1 add to iter line 81 - done
 add_to_iter () {
 iter=$2
@@ -12,10 +14,10 @@ sed -i "$distline s/define/;;define/" $1
 
 # 2 remove - done
 clean () {
-rm foo*
-rm components*
-rm connections*
-rm bar*
+rm -f foo*
+rm -f components*
+rm -f connections*
+rm -f bar*
 }
 
 # 3 create connections - done
@@ -67,18 +69,16 @@ main () {
 
 iter=1
 check_for_satisfied=""true
+clean
 
 while [ $check_for_satisfied == true ]
 do
-    echo "==================+ITERATION $iter+======================="
-    echo "==========================================================="
-    echo "==========================================================="
-    echo "==========================================================="
+    echo "----------------------ITERATION $iter---------------------------------"
 # 1 add to iter line 81 - done
 add_to_iter $1 $iter
 
 # 2 remove - done
-clean
+#clean
 
 # 3 create connections - done
 create_connections $1 $iter 
