@@ -29,7 +29,7 @@ rm -f bar*
 create_connections () {
 iter=$2
 
-m4 -I /usr/share/m4/examples $1 > foo.smt2
+m4 -I /usr/share/m4/examples $1 > foo_s$iter.smt2
 echo "cvc working..."
 (time cvc4 foo.smt2 > connections_s$iter) 2>time.logs$iter
 
