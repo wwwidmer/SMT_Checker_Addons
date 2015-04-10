@@ -1,4 +1,9 @@
 #! /bin/bash
+# TODO
+# srcdir
+# specify oracle values
+# iteration check
+
 
 srcdir=$HOME/src/synthesis
 
@@ -35,7 +40,6 @@ cat components connections_s$iter > bar_s$iter
 #./synth_graph.pl bar_s graph_imgout-s$iter
 ./synth_assert.pl connections_s$iter assert_out-s$iter 119
 }
-
 # 7 edit foo.m4 to add wff from 5s out
 # not very good looking at the moment, just getting the idea down to make it work
 oracle_assertions () {
@@ -45,7 +49,7 @@ next=$2
 ((next++))
 
 addwff=$(awk "/ADDWFF/ { print NR;}" $1)
-lines=$(awk "/sysinxh/ { print NR;}" connections_d$iter)
+lines=$(awk "/sysin*/ { print NR;}" connections_d$iter)
 sed -n $lines'p' connections_d$iter >> oracle$iter
 
 echo "sysout-"$next" for inputs "
@@ -58,6 +62,7 @@ echo "(= sysout-"$next" #b"$so")))" >> assert_oracle$iter
 line=$(head -1 assert_oracle$iter)
 sed -i "$addwff i $line" $1
 
+
 }
 
 
@@ -69,23 +74,25 @@ main () {
 
 iter=1
 check_for_satisfied=""true
-clean
+
+make clean
 
 while [ $check_for_satisfied == true ]
 do
-    echo "----------------------ITERATION $iter---------------------------------"
+
+echo "----------------------ITERATION $iter---------------------------------"
 # 1 add to iter line 81 - done
 add_to_iter $1 $iter
 
-# 2 remove - done
-#clean
-
+# 2 remove old - done
+clean
 # 3 create connections - done
 create_connections $1 $iter 
 cp foo.smt2 foo_s$iter.smt2
 # 4 uncomment DIST macro repeat - done
 sed -i "$distline s/;;define/define/" $1
 # 5 - timing - done
+clean
 m4 -I /usr/share/m4/examples $1 > foo.smt2
 { time cvc4 foo.smt2 > connections_d$iter ; } 2>time.logd$iter
 cp foo.smt2 foo_d$iter.smt2
@@ -104,15 +111,23 @@ fi
 
 # 7 edit foo.m4 to add wff from 5s out
 oracle_assertions $1 $iter
+echo "Is this correct? ITER:$iter \n"
+more assert_oracle$iter
 
+'
+read -p "Redo iteration?(y or n)\n" cor
+if cor = y
+then
+# Redo without changing iter, remove all $iter items
+rm -f *$iter
+else
 # 8 goto 1 - done
 ((iter++))
-
-
+fi
+'
+((iter++))
 done
-
 }
-
 
 #call main
 

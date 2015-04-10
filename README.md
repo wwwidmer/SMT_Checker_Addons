@@ -18,17 +18,38 @@ Assertion
 ==================
 Running
 ==================
-Add this line to your .m4 file
-; ADDWFF
+
+PREREQS:
+--------
+The following must be done for the bash script to work. Exclusive of these cause all sorts of error. (if there is no ; ADDWFF your file will turn into a 20k line mess)
+
+Add these lines to your .m4 file - somewhere near the top.
+     define(`ITER', 1)     
+     define(`DIST',`')
+  
+
+Add this line to your .m4 file where you want the oracle components to be.
+    ; ADDWFF
 
 
-./auto_smt m4file
+Determine the number of bits which will need to be padded in the oracle and Edit L54 in the .sh script. (Number mod 2 = padding, as in 4 = 2 bits of padding, 6 = 3 bits of padding, 8 = 3 bits of padding, etc...)
+L54 looks like:
+<< ./synth_assert.pl oracle$iter assert_oracle$iter 15 >>
+and will turn:
+<< sysninxh-2 (_ bv1 4)) >>
+into
+<< (assert(and(= sysinxh-2 #b0001) ... ))>>
 
+Oracle lines will begin with "sysin" at the moment. IE the script looks for "sysin" and determines those lines are holding oracle components. 
 
+--------
+./auto_smt.sh m4file
+all changes to the file happen at m4file_b.
 
 ==================
 Outputs
 ==================
+
 
 
 ==================
@@ -62,15 +83,10 @@ synth_assert.pl input output numvars
 	Perl script for assertion production. 
 
 
-
-
-
 =================
 TODO
 =================
 Check for Oracle nodes better. 
-SRCDIR script relocation
-
 
 
 =================
@@ -78,3 +94,4 @@ ISSUES
 =================
 
 -- That out-1 in-1 bug.
+-- Graph takes synthesis values and alternate distinguishing input values so the graphs are incorrect for DIST enabled part of the iteration.

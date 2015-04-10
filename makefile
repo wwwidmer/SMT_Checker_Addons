@@ -8,8 +8,6 @@ sort:
 	${MV} *d[[:digit:]] dist/
 
 clean:
-	$(RM) *_b*
-	$(RM) *_d*
 	$(RM) bar*
 	$(RM) *.png
 	$(RM) *.dot
